@@ -13,5 +13,17 @@ namespace Clase7
         {
 
         }
+
+        protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (int.TryParse(args.Value, out int number))
+            {
+                args.IsValid = number >= 1 && number <= DateTime.Now.Year;
+            }
+            else
+            {
+                args.IsValid = false;
+            }
+        }
     }
 }

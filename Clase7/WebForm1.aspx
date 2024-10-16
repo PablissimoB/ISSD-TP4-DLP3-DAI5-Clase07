@@ -22,6 +22,10 @@
             Edad <asp:TextBox ID="TextBox2" runat="server" Width="78px"></asp:TextBox>
 &nbsp;<asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="TextBox2" Display="None" ErrorMessage="La edad no esta entre 12 y 99" ForeColor="#CC3300" MaximumValue="99" MinimumValue="12" Type="Integer"></asp:RangeValidator>
             <br />
+            Año nacimiento
+            <asp:TextBox ID="TextBox5" runat="server"></asp:TextBox>
+            <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="TextBox5" Display="Dynamic" ErrorMessage="Ingrese un año valido" ForeColor="#CC3300" OnServerValidate="CustomValidator1_ServerValidate"></asp:CustomValidator>
+            <br />
             Email
             <asp:TextBox ID="TextBox4" runat="server" Width="426px"></asp:TextBox>
             <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="TextBox4" Display="None" ErrorMessage="El valor ingresado no es un Email" ForeColor="#CC3300" ValidationExpression="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"></asp:RegularExpressionValidator>
