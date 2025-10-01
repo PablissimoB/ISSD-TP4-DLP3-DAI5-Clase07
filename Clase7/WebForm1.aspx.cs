@@ -28,7 +28,8 @@ namespace Clase7
 
         protected void CustomValidator3_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = args.Value.EndsWith("@gmail.com");
+            string mail = args.Value;
+            args.IsValid = mail.EndsWith("@gmail.com");
            
         }
     }
