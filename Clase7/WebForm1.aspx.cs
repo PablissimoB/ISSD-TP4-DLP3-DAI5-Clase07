@@ -16,14 +16,20 @@ namespace Clase7
 
         protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            if (int.TryParse(args.Value, out int number))
-            {
-                args.IsValid = number >= 1 && number <= DateTime.Now.Year;
-            }
-            else
-            {
-                args.IsValid = false;
-            }
+            int anio = int.Parse(args.Value);
+            args.IsValid = anio >= 1 && anio <= DateTime.Now.Year;
+        }
+
+        protected void CustomValidator2_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            int edad;
+            args.IsValid = int.TryParse(args.Value, out edad);
+        }
+
+        protected void CustomValidator3_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = args.Value.EndsWith("@gmail.com");
+           
         }
     }
 }
