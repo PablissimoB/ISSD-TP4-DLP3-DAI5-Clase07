@@ -6,50 +6,71 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+    .vs-hidden { display:none; } 
+</style>
 </head>
 <body>
     <form id="form1" runat="server">
+            <asp:ScriptManager ID="ScriptManager1" runat="server" />
         <div>
             <asp:Label ID="Label1" runat="server" Text="Username"></asp:Label>
             <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
-            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="TextBox1" ErrorMessage="No completo el campo Username" ForeColor="#CC3300" Display="None"></asp:RequiredFieldValidator>
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ValidationGroup="vgForm" runat="server" ControlToValidate="TextBox1" ErrorMessage="No completo el campo Username" ForeColor="#CC3300" Display="None"></asp:RequiredFieldValidator>
             <br />
             Reingrese su Username
             <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox>
-&nbsp;<asp:CompareValidator ID="CompareValidator1" runat="server" ControlToCompare="TextBox1" ControlToValidate="TextBox3" Display="None" ErrorMessage="No coinciden" ForeColor="#CC3300"></asp:CompareValidator>
-            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="TextBox3" ErrorMessage="No reingreso el Username" ForeColor="#CC3300" Display="None"></asp:RequiredFieldValidator>
+&nbsp;<asp:CompareValidator ID="CompareValidator1" runat="server" ValidationGroup="vgForm" ControlToCompare="TextBox1" ControlToValidate="TextBox3" Display="None" ErrorMessage="No coinciden" ForeColor="#CC3300"></asp:CompareValidator>
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ValidationGroup="vgForm" runat="server" ControlToValidate="TextBox3" ErrorMessage="No reingreso el Username" ForeColor="#CC3300" Display="None"></asp:RequiredFieldValidator>
             <br />
             Edad <asp:TextBox ID="TextBox2" runat="server" Width="78px"></asp:TextBox>
-&nbsp;<asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="TextBox2" Display="None" ErrorMessage="La edad no esta entre 12 y 99" ForeColor="#CC3300" MaximumValue="99" MinimumValue="12" Type="Integer"></asp:RangeValidator>
-            <%--<asp:CustomValidator ID="CustomValidator2" runat="server" ControlToValidate="TextBox2" ErrorMessage="Debe ingresar numeros" ForeColor="#CC3300" OnServerValidate="CustomValidator2_ServerValidate"  Display="None"></asp:CustomValidator>--%>
-            <asp:CustomValidator ID="CustomValidator4" runat="server" Display="None" ErrorMessage="La edad debe ser numeros" ForeColor="#CC3300" ClientValidationFunction="validarEdad" ControlToValidate="TextBox2"></asp:CustomValidator>
+&nbsp;<asp:RangeValidator ID="RangeValidator1" runat="server" ValidationGroup="vgForm" ControlToValidate="TextBox2" Display="None" ErrorMessage="La edad no esta entre 12 y 99" ForeColor="#CC3300" MaximumValue="99" MinimumValue="12" Type="Integer"></asp:RangeValidator>
+
+            <asp:CustomValidator ID="CustomValidator4" runat="server" ValidationGroup="vgForm" Display="None" ErrorMessage="La edad debe ser numeros" ForeColor="#CC3300" ClientValidationFunction="validarEdad" ControlToValidate="TextBox2"></asp:CustomValidator>
             <br />
             Año nacimiento
             <asp:TextBox ID="TextBox5" runat="server"></asp:TextBox>
-            <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="TextBox5" ErrorMessage="Ingrese un año valido" ForeColor="#CC3300" OnServerValidate="CustomValidator1_ServerValidate"  Display="None"></asp:CustomValidator>
+            <asp:CustomValidator ID="CustomValidator1" runat="server" ValidationGroup="vgForm" ControlToValidate="TextBox5" ErrorMessage="Ingrese un año valido" ForeColor="#CC3300" OnServerValidate="CustomValidator1_ServerValidate"  Display="None"></asp:CustomValidator>
             <br />
             Email
             <asp:TextBox ID="TextBox4" runat="server" Width="426px"></asp:TextBox>
-            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="TextBox4" Display="None" ErrorMessage="El valor ingresado no es un Email" ForeColor="#CC3300" ValidationExpression="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"></asp:RegularExpressionValidator>
-            <asp:CustomValidator ID="CustomValidator3" runat="server" ControlToValidate="TextBox4" ErrorMessage="Debe ser un correo de Gmail" ForeColor="#CC3300" OnServerValidate="CustomValidator3_ServerValidate"  Display="None"></asp:CustomValidator>
+            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" ValidationGroup="vgForm" runat="server" ControlToValidate="TextBox4" Display="None" ErrorMessage="El valor ingresado no es un Email" ForeColor="#CC3300" ValidationExpression="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"></asp:RegularExpressionValidator>
+            <asp:CustomValidator ID="CustomValidator3" runat="server" ValidationGroup="vgForm" ControlToValidate="TextBox4" ErrorMessage="Debe ser un correo de Gmail" ForeColor="#CC3300" OnServerValidate="CustomValidator3_ServerValidate"  Display="None"></asp:CustomValidator>
             <br />
-            <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="#CC3300" HeaderText="Se encontraron los siguientes errores:" />
+            <asp:ValidationSummary ID="ValidationSummary1" ValidationGroup="vgForm" CssClass="vs-hidden" runat="server" ForeColor="#CC3300" HeaderText="Se encontraron los siguientes errores:" />
             <br />
             <br />
 
-            <asp:Button ID="Button1" runat="server" Text="Button" />
+            <asp:Button ID="Button1" runat="server" Text="Button" OnClientClick="return validarFormulario();"/>
         </div>
     </form>
     <script type="text/javascript">
-        function validarEdad(sender, args) {
-            var valor = args.Value;
 
-            if (/^\d+$/.test(valor)) {
-                args.IsValid = true;  
-            } else {
-                args.IsValid = false; 
+        function validarEdad(sender, args) {
+            const valor = args.Value.trim();
+            args.IsValid = /^\d+$/.test(valor);
+        }
+
+        function validarFormulario() {
+            ValidatorUpdateIsValid();
+            if (!Page_ClientValidate('vgForm')) {
+                const validador = document.getElementById('<%= ValidationSummary1.ClientID %>');
+                if (validador) {
+                    const htmlErrores = vs.innerHTML;
+                    if (htmlErrores && htmlErrores.trim() !== "") {
+                        Swal.fire({
+                            icon: "error",
+                            html: htmlErrores,
+                            confirmButtonText: "Cerrar",
+                            width: 600
+                        });
+                    }
+                }
+                return false;
             }
-    }
+            return true;
+        }
     </script>
 </body>
 </html>
