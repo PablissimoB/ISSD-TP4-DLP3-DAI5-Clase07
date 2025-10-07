@@ -26,7 +26,7 @@
             <br />
             Edad <asp:TextBox ID="TextBox2" runat="server" Width="78px"></asp:TextBox>
 &nbsp;<asp:RangeValidator ID="RangeValidator1" runat="server" ValidationGroup="vgForm" ControlToValidate="TextBox2" Display="None" ErrorMessage="La edad no esta entre 12 y 99" ForeColor="#CC3300" MaximumValue="99" MinimumValue="12" Type="Integer"></asp:RangeValidator>
-
+            <%--<asp:CustomValidator ID="CustomValidator2" runat="server" ControlToValidate="TextBox2" ErrorMessage="Debe ingresar numeros" ForeColor="#CC3300" OnServerValidate="CustomValidator2_ServerValidate"  Display="None"></asp:CustomValidator>--%>
             <asp:CustomValidator ID="CustomValidator4" runat="server" ValidationGroup="vgForm" Display="None" ErrorMessage="La edad debe ser numeros" ForeColor="#CC3300" ClientValidationFunction="validarEdad" ControlToValidate="TextBox2"></asp:CustomValidator>
             <br />
             Año nacimiento
@@ -55,8 +55,8 @@
         function validarFormulario() {
             ValidatorUpdateIsValid();
             if (!Page_ClientValidate('vgForm')) {
-                const validador = document.getElementById('<%= ValidationSummary1.ClientID %>');
-                if (validador) {
+                const vs = document.getElementById('<%= ValidationSummary1.ClientID %>');
+                if (vs) {
                     const htmlErrores = vs.innerHTML;
                     if (htmlErrores && htmlErrores.trim() !== "") {
                         Swal.fire({
